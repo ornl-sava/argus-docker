@@ -8,3 +8,13 @@ To start a container that captures UDP and TCP traffic on interface `en0` with a
 docker run -d -p 561:561 --network host jgoodall/argus -P 561 -S 600 -i en0 - "ip and (udp or tcp)"
 ```
 
+### Build and push docker image
+
+First, run `docker login` to authenticate to `docker.io`. Then, run (set the appropriate version - use `-#` for incrementing versions beyond the argus server version):
+
+```
+docker build -t jgoodall/argus .
+docker tag jgoodall/argus jgoodall/argus:3.0.8.2-1
+docker tag jgoodall/argus jgoodall/argus:latest
+docker push jgoodall/argus
+```
