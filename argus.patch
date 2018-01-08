@@ -1,0 +1,43 @@
+diff --git argus/ArgusModeler.c argus/ArgusModeler.c
+index 73c03f3..1b9bd6d 100644
+--- argus/ArgusModeler.c
++++ argus/ArgusModeler.c
+@@ -3996,9 +3996,12 @@ ArgusCreateIPv6Flow (struct ArgusModelerStruct *model, struct ip6_hdr *ip)
+       unsigned int *dp  = (unsigned int*) &ip->ip6_dst;
+       unsigned short alen, sport = 0, dport = 0;
+       unsigned int *rsp, *rdp;
++
++      unsigned plen;      
+ #ifdef _LITTLE_ENDIAN
+-//    unsigned plen;
+-//    plen = ntohs(ip->ip6_plen);
++      plen = ntohs(ip->ip6_plen);
++#else
++      plen = ip->ip6_plen
+ #endif 
+ 
+       tflow = model->ArgusThisFlow;
+@@ -4039,6 +4042,11 @@ ArgusCreateIPv6Flow (struct ArgusModelerStruct *model, struct ip6_hdr *ip)
+ 
+       model->ArgusThisIpv6Frag = NULL;
+       model->ArgusThisLength -= sizeof(*ip);
++
++      // JWR: BEGIN: Use IP header length for bytes
++      model->ArgusThisBytes = plen + /* Ethernet Frame Octets */ 18;
++      // JWR: END: Use IP header length for bytes
++
+       model->ArgusSnapLength -= sizeof(*ip);
+ 
+       model->ArgusThisUpHdr = (unsigned char *)(ip + 1);
+@@ -4211,6 +4219,11 @@ ArgusCreateIPv4Flow (struct ArgusModelerStruct *model, struct ip *ip)
+          model->ArgusOptionIndicator = 0;
+ 
+       model->ArgusThisLength  = len;
++
++      // JWR: BEGIN: Use IP header length for bytes
++      model->ArgusThisBytes = tip->ip_len + /* Ethernet Frame Octets */ 18;
++      // JWR: END: Use IP header length for bytes
++
+       model->ArgusSnapLength -= hlen;
+ 
+       if (model->ArgusFlowKey & ARGUS_FLOW_KEY_CLASSIC5TUPLE) {
