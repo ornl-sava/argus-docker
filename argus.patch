@@ -42,7 +42,7 @@ index 73c03f3..1b9bd6d 100644
  
        if (model->ArgusFlowKey & ARGUS_FLOW_KEY_CLASSIC5TUPLE) {
 diff --git argus/ArgusOutput.c argus/ArgusOutput.c
-index f7b0743..c53ddde 100644
+index f7b0743..4fa4b83 100644
 --- argus/ArgusOutput.c
 +++ argus/ArgusOutput.c
 @@ -1779,7 +1779,7 @@ setArgusMarReportInterval(struct ArgusOutputStruct *output, char *value)
@@ -50,10 +50,33 @@ index f7b0743..c53ddde 100644
  #endif
  
 -#define PARANOID		1
-+#define PARANOID		0
++// #define PARANOID		1
  #define KILL_IP_OPTIONS		1
  #define HOSTS_ACCESS		1
  
+@@ -1812,14 +1812,14 @@ ArgusTcpWrapper (int fd, struct sockaddr *from)
+     * that pretend to have someone elses host name.
+     */
+  
+-#ifdef PARANOID
+-   if (STR_EQ(eval_hostname(request.client), paranoid)) {
+-      ArgusLog (deny_severity, "refused connect from %s", eval_client(&request)); 
+-      if (request.sink)
+-         request.sink(request.fd);
+-      return -1;
+-   }
+-#endif
++// #ifdef PARANOID
++//    if (STR_EQ(eval_hostname(request.client), paranoid)) {
++//       ArgusLog (deny_severity, "refused connect from %s", eval_client(&request)); 
++//       if (request.sink)
++//          request.sink(request.fd);
++//       return -1;
++//    }
++// #endif
+ 
+     /*
+      * The BSD rlogin and rsh daemons that came out after 4.3 BSD disallow
 diff --git argus/ArgusUdt.c argus/ArgusUdt.c
 index efb933b..4c966af 100644
 --- argus/ArgusUdt.c
